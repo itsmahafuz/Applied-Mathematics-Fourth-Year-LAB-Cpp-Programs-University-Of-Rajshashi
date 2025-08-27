@@ -1,4 +1,4 @@
-/*/*
+/*
  Date: August 11th, 2025
  Author: MD MAHAFUZUR RAHMAN
  Roll: 2110428176
@@ -22,6 +22,7 @@ Subject to the conditions:
 
 #include <iostream>
 #include <cmath>
+#include<vector>
 #include <iomanip>
 using namespace std;
 
@@ -74,14 +75,17 @@ tryhk:
     int n = (t2 - t1) / k;
 
     // 2D array for solution u[time][space]
-    double u[n + 1][m + 1];
-
-    // Initialize all values to zero
-    for (int i = 0; i <= n; i++) {
-        for (int j = 0; j <= m; j++) {
-            u[i][j] = 0;
-        }
-    }
+    // double u[n+1][m+1];
+    // // Initialize all values to zero
+    // for (int i = 0; i <= n; i++) {
+    //     for (int j = 0; j <= m; j++) {
+    //         u[i][j] = 0;
+    //     }
+    // }
+       vector<vector<double>>u(n+1,vector<double>(m+1,0.0)); // 2D vector for u(x,t)
+    /*Replacing static array with vector for safety and flexibility
+     vector automatically allocates memory on the heap, avoiding stack overflow for large n and m
+     All elements are initialized to 0.0*/
 
     double x, t;
 
@@ -116,6 +120,31 @@ tryhk:
         cin >> option;
 
         if (option == 1) { // Print all u(x,t) values
+             /*
+------------------ Exam Note ------------------
+Purpose: Even if the simulation grid is very fine (e.g., h = k = 0.01, 0.001, 0.0001),
+         we want to display u(x,t) only at selected coarse points:
+             x = 0, 0.2, 0.4, ..., 1.0
+             t = 0, 0.2, 0.4, ..., 1.0
+
+Method: Calculate step sizes dynamically based on the fine grid:
+         double output_step = 0.2;                  // coarse output step in x and t
+         int i_step = (int)round(output_step / k);  // number of fine time steps to skip
+         int j_step = (int)round(output_step / h);  // number of fine space steps to skip
+         // or generally put i_step = 20 / 200 etc.
+
+Usage: In the for-loops, increment by i_step and j_step to print only these coarse points.
+       Example:
+           for (int i = 0; i <= n; i += i_step) {
+               for (int j = 0; j <= m; j += j_step) {
+                   cout << u[i][j] << '\n';
+               }
+           }
+
+Note: The same approach (using i_step and j_step) can also be applied
+      in option 2 (x varies, t constant) and option 3 (x constant, t varies)  
+      to print values only at the selected coarse points.
+*/
             for (int i = 0; i <= n; i++) {
                 t = t1 + i * k;
                 for (int j = 0; j <= m; j++) {
