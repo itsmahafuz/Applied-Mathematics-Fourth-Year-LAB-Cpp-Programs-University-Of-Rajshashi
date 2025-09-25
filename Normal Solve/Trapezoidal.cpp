@@ -18,7 +18,7 @@ using namespace std;
 // Define the function f(x) to be integrated
 double f(double x)
 {
-    return (4*x-3*x*x); // Example: f(x) = 1 / (1 + x^2)
+    return (4*x); // Example: f(x) = 1 / (1 + x^2)
 }
 
 int main()
@@ -77,3 +77,4 @@ int main()
 
     return 0;
 }
+
