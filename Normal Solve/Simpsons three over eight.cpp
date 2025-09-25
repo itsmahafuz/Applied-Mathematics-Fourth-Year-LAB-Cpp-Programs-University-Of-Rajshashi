@@ -19,7 +19,7 @@ using namespace std;
 // Function to integrate
 double f(double x) {
     // Example function: sin(x) - ln(x) + e^x
-    return sin(x) +x*x+ exp(-x);
+    return  exp(-x);
 }
 
 int main() {
@@ -86,3 +86,4 @@ int main() {
 
     return 0;
 }
+
