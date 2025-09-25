@@ -19,7 +19,7 @@ using namespace std;
 // Define the function f(x) to integrate
 double f(double x)
 {
-    return (sin(x)+x*x+exp(x));  // Example: f(x) = 1 / (1 + x^2)
+    return (2x);  
 }
 
 int main()
@@ -90,3 +90,4 @@ int main()
 
     return 0;
 }
+
