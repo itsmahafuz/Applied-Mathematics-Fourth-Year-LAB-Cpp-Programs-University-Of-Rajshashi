@@ -1,0 +1,72 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <vector>
+using namespace std;
+
+int main()
+{
+    cout.precision(6);
+    cout.setf(ios::fixed);
+
+    int n;
+    cout << "Enter the number of values to be entered: ";
+    cin >> n;
+
+    // Arrays for x and y values
+    vector<double> x(n);
+    vector<vector<double>> y(n, vector<double>(n, 0));
+
+    // Input x values
+    cout << "Enter the values of x:\n";
+    for (int i = 0; i < n; i++)
+        cin >> x[i];
+
+    // Input y values (first column of difference table)
+    cout << "Enter the values of y:\n";
+    for (int i = 0; i < n; i++)
+        cin >> y[i][0];
+
+    // Step 1: Construct Divided Difference Table
+    for (int j = 1; j < n; j++)
+    {
+        for (int i = 0; i < n - j; i++)
+        {
+            y[i][j] = (y[i + 1][j - 1] - y[i][j - 1]) / (x[i + j] - x[i]);
+        }
+    }
+
+    // Step 2: Print Divided Difference Table
+    cout << "\nThe Divided Difference Table is as follows:\n\n";
+    cout << setw(10) << "x" << setw(10) << "y";
+    for (int i = 1; i < n; i++)
+        cout << setw(10) << "d" << i << "y";
+    cout << "\n--------------------------------------------------------------\n";
+
+    int k = n;
+    for (int i = 0; i < n; i++)
+    {
+        cout << setw(10) << x[i];
+        for (int j = 0; j < k; j++)
+        {
+            cout << setw(10) << y[i][j];
+        }
+        cout << "\n";
+        k--;
+    }
+
+    // Step 3: Interpolation / Extrapolation
+    double xn, sum = y[0][0], temp = 1.0;
+    cout << "\nEnter the value of x at which y is to be calculated: ";
+    cin >> xn;
+
+    for (int j = 1; j < n; j++)
+    {
+        temp *= (xn - x[j - 1]);
+        sum += temp * y[0][j];
+    }
+
+    cout << "The value of y at x = " << xn << " is: " << sum << endl;
+
+    return 0;
+}
