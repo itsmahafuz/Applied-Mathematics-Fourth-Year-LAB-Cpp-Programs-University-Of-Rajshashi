@@ -1,0 +1,59 @@
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+#include <vector>
+using namespace std;
+
+// Define dy/dx = f(x,y)
+#define f(x,y) (x + y)
+
+int main()
+{
+    cout.precision(6);
+    cout.setf(ios::fixed);
+
+    double x0, y0, xn, h;
+    int n;
+
+    // Step 1: Input values
+    cout << "Enter the initial value of x: ";
+    cin >> x0;
+    cout << "Enter the initial value of y: ";
+    cin >> y0;
+    cout << "Enter the value of x up to which you want to find y: ";
+    cin >> xn;
+    cout << "Enter the step size h: ";
+    cin >> h;
+
+    n = (xn - x0) / h;  // number of steps
+
+    // Arrays using vector
+    vector<double> x(n + 1), y(n + 1), y1(n + 1);
+
+    // Initial values
+    x[0] = x0;
+    y[0] = y0;
+    y1[0] = y0;
+
+    // Step 2: Iteration using Modified Euler Method
+    for (int i = 0; i < n; i++)
+    {
+        // Predictor
+        y1[i + 1] = y[i] + h * f(x[i], y[i]);
+
+        // Next x value
+        x[i + 1] = x[i] + h;
+
+        // Corrector
+        y[i + 1] = y[i] + (h / 2.0) * (f(x[i], y[i]) + f(x[i + 1], y1[i + 1]));
+    }
+
+    // Step 3: Print results
+    cout << "\nThe values of y at different x are:\n";
+    for (int i = 0; i <= n; i++)
+    {
+        cout << "y(" << x[i] << ") = " << y[i] << endl;
+    }
+
+    return 0;
+}
