@@ -1,5 +1,5 @@
 /*
- Date      : December 13, 2025
+ Date      : December 14, 2025
  Name      : MD MAHAFUZUR RAHMAN
  Roll      : 2110428176
  Department: Applied Mathematics
@@ -11,21 +11,21 @@
 /*
  Program Title:
  --------------
- Interpolation using Newton’s Forward Difference Formula
+ Interpolation using Newtonâ€™s Forward Difference Formula
 
  Objective:
  ----------
  To compute the value of a function at a given point using
- Newton’s Forward interpolation formula based on equally
+ Newtonâ€™s Forward interpolation formula based on equally
  spaced tabulated data.
 
  Theory (Brief):
  ---------------
- Newton’s Forward interpolation formula is used when the
+ Newtonâ€™s Forward interpolation formula is used when the
  value to be interpolated lies near the start of the data table.
  The Forward difference table is constructed and the formula
 
-     y(x) = y_0 + p*dy_0 + p(p-1)/2! * d²y_0 + ...
+     y(x) = y_0 + p*dy_0 + p(p-1)/2! * dÂ²y_0 + ...
 
  is applied, where
      p = (x - x_0) / h
@@ -111,10 +111,10 @@ int main()
             cout << "\nEnter the value at which y is to be calculated:\n";
             cin >> xn;
 
-            /* Compute p for Newton’s forward formula */
+            /* Compute p for Newtonâ€™s forward formula */
             p = (xn - x[0]) / h;
 
-            /* Apply Newton’s Forward interpolation formula */
+            /* Apply Newtonâ€™s Forward interpolation formula */
             for(int j = 1; j < n; j++)
             {
                 temp = temp * (p - j + 1) / j;
@@ -143,3 +143,4 @@ int main()
 
     return 0;
 }
+
