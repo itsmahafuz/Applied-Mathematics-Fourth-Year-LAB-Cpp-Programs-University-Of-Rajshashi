@@ -11,21 +11,21 @@
 /*
  Program Title:
  --------------
- Interpolation using Newton’s Backward Difference Formula
+ Interpolation using Newtonâ€™s Backward Difference Formula
 
  Objective:
  ----------
  To compute the value of a function at a given point using
- Newton’s backward interpolation formula based on equally
+ Newtonâ€™s backward interpolation formula based on equally
  spaced tabulated data.
 
  Theory (Brief):
  ---------------
- Newton’s backward interpolation formula is used when the
+ Newtonâ€™s backward interpolation formula is used when the
  value to be interpolated lies near the end of the data table.
  The backward difference table is constructed and the formula
 
-     y(x) = y_n + p?y_n + p(p+1)/2! ?²y_n + ...
+     y(x) = y_n + p?y_n + p(p+1)/2! ?Â²y_n + ...
 
  is applied, where
      p = (x - x_n) / h
@@ -114,10 +114,10 @@ int main()
             cout << "\nEnter the value of x at which y is to be calculated:\n";
             cin >> xn;
 
-            /* Compute p for Newton’s backward formula */
+            /* Compute p for Newtonâ€™s backward formula */
             p = (xn - x[n-1]) / h;
 
-            /* Apply Newton’s backward interpolation formula */
+            /* Apply Newtonâ€™s backward interpolation formula */
             for(int j = 1; j < n; j++)
             {
                 temp = temp * (p + (j - 1)) / j;
