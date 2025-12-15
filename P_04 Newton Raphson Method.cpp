@@ -12,7 +12,7 @@
  Program:
  --------
  This program solves a system of two nonlinear equations
- using the Newton–Raphson iterative method.
+ using the Newtonâ€“Raphson iterative method.
 
  Given system:
   f(x,y) = x^2 - y^2 - 3 = 0
@@ -47,7 +47,7 @@ double gy(double x, double y) { return 2*y; }
 /*
  Function: newtonRaphson
  -----------------------
- Solves the system using Newton–Raphson method
+ Solves the system using Newtonâ€“Raphson method
  x0, y0 : initial approximations
  tol    : desired accuracy
 */
@@ -58,7 +58,7 @@ void newtonRaphson(double x0, double y0, double tol)
     int iter = 0;
 
     cout << "\n-------------------------------------------------------------\n";
-    cout << " Newton–Raphson Method for System of Nonlinear Equations\n";
+    cout << " Newtonâ€“Raphson Method for System of Nonlinear Equations\n";
     cout << "-------------------------------------------------------------\n";
     cout << "Iter        x            y           f(x,y)        g(x,y)\n";
     cout << "-------------------------------------------------------------\n";
@@ -76,7 +76,7 @@ void newtonRaphson(double x0, double y0, double tol)
             return;
         }
 
-        /* Newton–Raphson correction terms */
+        /* Newtonâ€“Raphson correction terms */
         h = (-f(x,y)*gy(x,y) + fy(x,y)*g(x,y)) / d;
         k = (-fx(x,y)*g(x,y) + f(x,y)*gx(x,y)) / d;
 
