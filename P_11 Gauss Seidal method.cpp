@@ -12,19 +12,21 @@
  Program Title:
  --------------
  Solution of System of Linear Equations using
- Gauss–Seidel Iterative Method
+ Gaussâ€“Seidel Iterative Method
 
  Objective:
  ----------
  To solve a system of n linear equations using
- Gauss–Seidel method assuming diagonal dominance.
+ Gaussâ€“Seidel method assuming diagonal dominance.
 
  Method:
  -------
- 1. Check diagonal dominance
- 2. Take initial guesses
- 3. Apply Gauss–Seidel iteration
- 4. Stop when required accuracy is achieved
+ 1. Read augmented matrix
+ 2. Apply pivotisation (row interchange)
+ 3. Check diagonal dominance
+ 4. Take initial guess values
+ 5. Apply Gaussâ€“Seidel iteration
+ 6. Stop when required accuracy is achieved
 */
 
 #include<bits/stdc++.h>
@@ -32,22 +34,43 @@ using namespace std;
 
 int main()
 {
+    /* Set output precision */
 	cout.precision(5);
-	cout.setf(ios::fixed); // set output precision
+	cout.setf(ios::fixed);
 
+	/* Number of variables */
 	int n;
 	cout<<"\nEnter the number of variables:\n";
 	cin>>n;
 
+	/* Augmented matrix, solution array and tolerance */
 	double a[n][n+1], x[n], oldx[n], eps;
 
-	// Input augmented matrix (coefficients + RHS)
-	cout<<"\nEnter the augmented matrix(row-wise):\n";
+	/* ---------------- Input Augmented Matrix ---------------- */
+	cout<<"\nEnter the augmented matrix (row-wise):\n";
 	for(int i=0;i<n;i++)
 	{
 		for(int j=0;j<n+1;j++)
 		{
 			cin>>a[i][j];
+		}
+	}
+
+	/* ---------------- Pivotisation ---------------- */
+	/* Row interchange to improve diagonal dominance */
+	for(int i=0;i<n;i++)
+	{
+		for(int k=i+1;k<n;k++)
+		{
+			if(fabs(a[i][i]) < fabs(a[k][i]))
+			{
+				for(int j=0;j<=n;j++)
+				{
+					double t = a[i][j];
+					a[i][j] = a[k][j];
+					a[k][j] = t;
+				}
+			}
 		}
 	}
 
@@ -57,19 +80,30 @@ int main()
 		double sum = 0;
 		for(int j=0;j<n;j++)
 		{
-			if(j != i) sum += fabs(a[i][j]); // sum of non-diagonal elements
+			if(j != i)
+				sum += fabs(a[i][j]);   // sum of non-diagonal elements
 		}
-		if(fabs(a[i][i]) < sum) // diagonal element must be >= sum of others
+
+		/* If diagonal element is smaller, method may diverge */
+		if(fabs(a[i][i]) < sum)
 		{
 			cout << "\nThe system is NOT diagonally dominant.\n";
 			cout << "Gauss-Seidel method may not converge.\n";
-			cout << "Try again with a different system or by interchanging the positions of the equations.\n";
+			cout << "Try again with a different system or by interchanging the equations.\n";
 			return 0;
-		}	
+		}
 	}
-	cout<<"\nThe system is diagonally dominant. Hence Gauss-Seidel method is applicable.\n";
 
-	/* ---------------- Input Initial Guesses ---------------- */
+	/* Display diagonally dominant system */
+	cout << "\nThe diagonally dominant system is:\n";
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<=n;j++)
+			cout << setw(15) << a[i][j];
+		cout << endl;
+	}
+
+	/* ---------------- Initial Guess ---------------- */
 	cout<<"\nEnter initial guess values:\n";
 	for(int i=0;i<n;i++)
 	{
@@ -81,42 +115,46 @@ int main()
 	cout<<"\nEnter the allowed error (tolerance): \n";
 	cin>>eps;
 
-	/* ---------------- Gauss-Seidel Iteration ---------------- */
+	/* ---------------- Gaussâ€“Seidel Iteration ---------------- */
 	int iter = 0;
 	while(true)
 	{
 		iter++;
-		for(int i=0;i<n;i++)
-			oldx[i] = x[i]; // store old values to check convergence
 
+		/* Store old values for convergence check */
+		for(int i=0;i<n;i++)
+			oldx[i] = x[i];
+
+		/* Update values using Gaussâ€“Seidel formula */
 		for(int i=0;i<n;i++)
 		{
-			double sum = a[i][n]; // start with RHS
+			double sum = a[i][n];   // RHS
 			for(int j=0;j<n;j++)
 			{
 				if(j != i)
-					sum -= a[i][j]*x[j]; // subtract sum of other terms
+					sum -= a[i][j] * x[j];
 			}
-			x[i] = sum / a[i][i]; // update variable immediately (Gauss-Seidel)
+			x[i] = sum / a[i][i];  // immediate update
 		}
 
-		// Display iteration results
+		/* Display iteration result */
 		cout<<"\nIteration "<<iter<<": ";
 		for(int i=0;i<n;i++)
-			cout<<left<<"x"<<i+1<<" = "<<setw(15)<<x[i];
+			cout<<"x"<<i+1<<" = "<<setw(15)<<x[i];
 		cout<<endl;
 
-		// Check if all variables satisfy tolerance
+		/* Convergence check */
 		bool stop = true;
 		for(int i=0;i<n;i++)
 		{
 			if(fabs(x[i] - oldx[i]) > eps)
 				stop = false;
 		}
-		if(stop) break; // if converged, exit loop
+
+		if(stop) break;  // stop if converged
 	}
 
-	/* ---------------- Final Solution ---------------- */
+	/* ---------------- Final Result ---------------- */
 	cout<<"\nFinal solution after "<<iter<<" iterations:\n";
 	for(int i=0;i<n;i++)
 	{
@@ -125,4 +163,3 @@ int main()
 
 	return 0;
 }
-
