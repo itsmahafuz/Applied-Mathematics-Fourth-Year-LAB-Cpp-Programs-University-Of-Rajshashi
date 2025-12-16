@@ -21,10 +21,12 @@
 
  Method:
  -------
- 1. Check diagonal dominance
- 2. Take initial guesses
- 3. Apply Jacobi iteration
- 4. Stop when desired accuracy is achieved
+ 1. Read augmented matrix
+ 2. Apply pivotisation to improve diagonal dominance
+ 3. Check diagonal dominance condition
+ 4. Take initial guess values
+ 5. Apply Jacobi iteration using old values
+ 6. Stop when desired accuracy is achieved
 */
 
 #include<iostream>
@@ -34,6 +36,7 @@ using namespace std;
 
 int main()
 {
+    /* Set output precision */
     cout.precision(4);
     cout.setf(ios::fixed);
 
@@ -41,18 +44,37 @@ int main()
     cout << "\nEnter number of variables: ";
     cin >> n;
 
+    /* Declaration of variables */
     double a[n][n+1];   // Augmented matrix
-    double x[n];        // Old values
-    double x1[n];       // New values
+    double x[n];        // Old iteration values
+    double x1[n];       // New iteration values
     double eps;         // Tolerance
 
-    /* Input augmented matrix */
+    /* -------- Input Augmented Matrix -------- */
     cout << "\nEnter augmented matrix (coefficients + RHS):\n";
     for(int i=0;i<n;i++)
     {
         for(int j=0;j<=n;j++)
         {
             cin >> a[i][j];
+        }
+    }
+
+    /* -------- Pivotisation (Row Interchange) -------- */
+    /* Helps to improve diagonal dominance */
+    for(int i=0;i<n;i++)
+    {
+        for(int k=i+1;k<n;k++)
+        {
+            if(fabs(a[i][i]) < fabs(a[k][i]))
+            {
+                for(int j=0;j<=n;j++)
+                {
+                    double t = a[i][j];
+                    a[i][j] = a[k][j];
+                    a[k][j] = t;
+                }
+            }
         }
     }
 
@@ -70,14 +92,20 @@ int main()
         {
             cout << "\nThe system is NOT diagonally dominant.\n";
             cout << "Jacobi method may not converge.\n";
-		  cout << "Try again with a different system or by interchanging the positions of the equations.\n";
             return 0;
         }
     }
 
-    cout << "\nThe system is diagonally dominant.\n";
+    /* Display diagonally dominant system */
+    cout << "\nThe diagonally dominant system is:\n";
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<=n;j++)
+            cout << setw(15) << a[i][j];
+        cout << endl;
+    }
 
-    /* Input initial guess */
+    /* -------- Input Initial Guess -------- */
     cout << "\nEnter initial guess values:\n";
     for(int i=0;i<n;i++)
     {
@@ -89,13 +117,13 @@ int main()
     cout << "\nEnter allowed error (tolerance): ";
     cin >> eps;
 
-    /* -------- Jacobi Iteration -------- */
+    /* -------- Jacobi Iteration Process -------- */
     int iter = 0;
     while(true)
     {
         iter++;
 
-        /* Compute new values using only OLD values */
+        /* Compute new values using ONLY old values */
         for(int i=0;i<n;i++)
         {
             double sum = a[i][n]; // RHS
@@ -107,7 +135,7 @@ int main()
             x1[i] = sum / a[i][i];
         }
 
-        /* Display iteration result */
+        /* Display current iteration */
         cout << "Iteration " << iter << ": ";
         for(int i=0;i<n;i++)
             cout << "x" << i+1 << " = " << x1[i] << "  ";
@@ -120,14 +148,14 @@ int main()
             if(fabs(x1[i] - x[i]) > eps)
                 stop = false;
 
-            x[i] = x1[i]; // update old values
+            x[i] = x1[i]; // Update old values
         }
 
         if(stop)
             break;
     }
 
-    /* Final solution */
+    /* -------- Final Solution -------- */
     cout << "\nFinal solution after " << iter << " iterations:\n";
     for(int i=0;i<n;i++)
     {
@@ -136,4 +164,3 @@ int main()
 
     return 0;
 }
-
