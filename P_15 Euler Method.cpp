@@ -1,4 +1,4 @@
-/*
+/* 
  Date      : December 16, 2025
  Author    : MD MAHAFUZUR RAHMAN
  Roll      : 2110428176
@@ -12,16 +12,16 @@
  Program Title:
  --------------
  Solution of First Order Ordinary Differential Equation
- using Euler’s Method
+ using Eulerâ€™s Method
 
  Objective:
  ----------
- To numerically solve the differential equation
- dy/dx = f(x,y) with a given initial condition.
+ To numerically solve the first order differential equation
+ dy/dx = f(x, y) using Eulerâ€™s method with given initial conditions.
 
  Method:
  -------
- Euler’s Method uses the formula:
+ Eulerâ€™s Method formula:
      y_{i+1} = y_i + h f(x_i, y_i)
 
  where h is the step size.
@@ -35,151 +35,147 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-/* Defines the differential equation dy/dx = f(x,y) */
+/* 
+ Function defining the given differential equation
+ dy/dx = 1 + 2y
+*/
 double f(double x, double y)
 {
-    return x/y;
+    return 1 + 2*y;
 }
 
 int main()
 {
-    /* Set output precision */
-    cout.precision(5);
-    cout.setf(ios::fixed);
+    /* Set fixed decimal precision for output */
+    cout << fixed << setprecision(5);
 
-    int choice, n;
+    char check;   // Variable to control program repetition
 
-    /* Display menu */
-    cout << "\nEuler Method Menu:\n";
-    cout << "1. Find the value of y at a specific point\n";
-    cout << "2. Display values of y over a range\n";
-    cout << "\nEnter your choice (1 or 2): ";
-    cin >> choice;
-
-    double x0, y0, x_final, h;
-
-    /* Input initial conditions and step size */
-    cout << "\nEnter the initial value of x: ";
-    cin >> x0;
-    cout << "Enter the initial value of y: ";
-    cin >> y0;
-    cout << "Enter the step size h (must be positive): ";
-    cin >> h;
-
-    /* Validate step size */
-    if(h <= 0)
+    do
     {
-        cout << "\nStep size must be positive.\n";
-        return 1;
-    }
+        int choice;   // Stores menu choice
 
-    /* ---------------- Choice 1 ---------------- */
-    /* Find y at a specific value of x */
-    if(choice == 1)
-    {
-        cout << "\nEnter the value of x at which you want to find y: ";
-        cin >> x_final;
+        /* Display menu */
+        cout << "\nEuler Method Menu:\n";
+        cout << "1. Find the value of y at a specific point.\n";
+        cout << "2. Display values of y over a range.\n";
+        cout << "\nEnter your choice (1 or 2): ";
+        cin >> choice;
 
-        /* Calculate number of steps */
-        n = (int)round((x_final - x0) / h);
+        double x0, y0, x_final, h;
 
-        /* Validate inputs */
-        if(n <= 0 || x_final <= x0)
+        /* Input initial values and step size */
+        cout << "\nEnter the initial value of x: ";
+        cin >> x0;
+        cout << "\nEnter the initial value of y: ";
+        cin >> y0;
+        cout << "\nEnter the step size h (must be positive): ";
+        cin >> h;
+
+        /* Step size validation */
+        if(h <= 0)
         {
-            cout << "\nInvalid input values.\n";
+            cout << "\nStep size must be positive.\n";
             return 1;
         }
 
-        vector<double> x(n+1), y(n+1);
-
-        /* Assign initial values */
-        x[0] = x0;
-        y[0] = y0;
-
-        /* Apply Euler’s Method */
-        for(int i = 0; i < n; i++)
+        /* Input final x depending on choice */
+        if(choice == 1)
         {
-            if(y[i] == 0)
-            {
-                cout << "\nDivision by zero encountered.\n";
-                return 1;
-            }
-            y[i+1] = y[i] + h * f(x[i], y[i]);
-            x[i+1] = x[i] + h;
+            cout << "\nEnter the value of x at which you want to find y: ";
+            cin >> x_final;
         }
-
-        cout << "\nThe value of y at x = " << x_final
-             << " is: " << y[n] << endl;
-
-        /* Percentage error calculation */
-        double exact, pcerr;
-        cout << "\nEnter the exact value of y at x = "
-             << x_final << ": ";
-        cin >> exact;
-
-        if(exact != 0)
+        else if(choice == 2)
         {
-            pcerr = fabs((exact - y[n]) / exact) * 100;
-            cout << "\nPercentage error is: " << pcerr << " %\n";
+            cout << "\nEnter the final value of x: ";
+            cin >> x_final;
         }
         else
         {
-            cout << "\nExact value is zero, percentage error undefined.\n";
+            cout << "\nInvalid Option.\n";
+            return 0;
         }
-    }
 
-    /* ---------------- Choice 2 ---------------- */
-    /* Display y values over a range */
-    else if(choice == 2)
-    {
-        cout << "\nEnter the final value of x: ";
-        cin >> x_final;
+        /* Calculate number of steps using ceil to handle floating point issues */
+        int n = (int)ceil((x_final - x0) / h);
 
-        n = (int)round((x_final - x0) / h);
-
+        /* Validate number of steps */
         if(n <= 0 || x_final <= x0)
         {
             cout << "\nInvalid input values.\n";
             return 1;
         }
 
+        /* Declare arrays to store x and y values */
         vector<double> x(n+1), y(n+1);
 
+        /* Assign initial conditions */
         x[0] = x0;
         y[0] = y0;
 
-        /* Display table header */
-        cout << "\nValues of y at regular intervals:\n";
-        cout << left << setw(12) << "x"
-             << setw(15) << "y" << endl;
-        cout << string(40, '-') << endl;
-
-        /* Euler iteration and output */
+        /* Apply Eulerâ€™s Method */
         for(int i = 0; i < n; i++)
         {
-            cout << left << setw(12) << x[i]
-                 << setw(15) << y[i] << endl;
-
+            /* Check for division by zero if required */
             if(y[i] == 0)
             {
                 cout << "\nDivision by zero encountered.\n";
                 return 1;
             }
 
+            /* Euler update formula */
             y[i+1] = y[i] + h * f(x[i], y[i]);
+
+            /* Increment x */
             x[i+1] = x[i] + h;
         }
 
-        /* Print final value */
-        cout << left << setw(12) << x[n]
-             << setw(15) << y[n] << endl;
-    }
-    else
-    {
-        cout << "\nInvalid Choice.\n";
-    }
+        /* Case 1: Value of y at a specific x */
+        if(choice == 1)
+        {
+            cout << "\nThe value of y at x = " << x_final << " is: " << y[n] << endl;
 
-    return 0;
+            double exact, pcerr;
+
+            /* Input exact value for error calculation */
+            cout << "\nEnter the exact value of y at x = " << x_final << ": ";
+            cin >> exact;
+
+            /* Percentage error calculation */
+            if(exact != 0)
+            {
+                pcerr = fabs((exact - y[n]) / exact) * 100;
+                cout << "\nPercentage error is: " << pcerr << " %.\n";
+            }
+            else
+            {
+                cout << "\nExact value is zero, percentage error undefined.\n";
+            }
+        }
+
+        /* Case 2: Display table of values */
+        else if(choice == 2)
+        {
+            cout << "\nValues of y at regular intervals:\n";
+            cout << left << setw(12) << "x" << setw(15) << "y" << endl;
+            cout << string(40, '-') << endl;
+
+            /* Print computed values */
+            for(int i = 0; i <= n; i++)
+            {
+                cout << left << setw(12) << x[i] << setw(15) << y[i] << endl;
+            }
+        }
+
+        /* Ask user if they want to run again */
+        cout << "\nDo you want to run the program again? (y/n): ";
+        cin >> check;
+
+    } while(tolower(check) == 'y');
+
+    return 0;   // Successful program termination
 }
+
+
 
 
