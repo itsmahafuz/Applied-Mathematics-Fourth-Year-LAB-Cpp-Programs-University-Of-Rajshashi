@@ -12,7 +12,7 @@
  Program Title:
  --------------
  Solution of Ordinary Differential Equation using
- Modified Euler (Heun�s) Method
+ Modified Euler (Heun’s) Method
 
  Objective:
  ----------
@@ -32,129 +32,139 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-/* Differential equation dy/dx = f(x,y) */
+/*
+ Function: f(x, y)
+ -----------------
+ Defines the given first-order differential equation
+     dy/dx = x - 2y
+*/
 double f(double x, double y)
 {
-    return 1 + 2*y;
+    return x - 2*y;
 }
 
 int main()
 {
-    cout << fixed << setprecision(6);   // set output precision
+    /* Set fixed precision for numerical output */
+    cout << fixed << setprecision(5);
 
-    int choice, n;
+    char check;   // Controls repetition of the program
 
-    /* Menu for user choice */
-    cout << "\nModified Euler Method Menu:\n";
-    cout << "\n1. Find the value of y at a specific point.\n";
-    cout << "\n2. Display values of y over a range at regular intervals.\n";
-    cout << "\nEnter your choice (1 or 2): ";
-    cin >> choice;
-
-    double x0, y0, x_final, h;
-
-    /* Input initial conditions and step size */
-    cout << "\nEnter the initial value of x: ";
-    cin >> x0;
-    cout << "\nEnter the initial value of y: ";
-    cin >> y0;
-    cout << "\nEnter the step size h (positive): ";
-    cin >> h;
-
-    /* Step size validation */
-    if(h <= 0)
+    do
     {
-        cout << "\nStep size must be positive.\n";
-        return 1;
-    }
+        int choice;   // Menu choice variable
 
-    /* ---------- Case 1: Value at a specific point ---------- */
-    if(choice == 1)
-    {
-        cout << "\nEnter the value of x at which you want to find y: ";
+        /* Display Modified Euler Method menu */
+        cout << "\nModified Euler Menu:\n";
+        cout << "1. Find the value of y at a specific point.\n";
+        cout << "2. Display values of y over a range at regular intervals.\n";
+        cout << "Enter your choice (1 or 2): ";
+        cin >> choice;
+
+        double x0, y0, x_final, h;
+
+        /* Input initial values and step size */
+        cout << "\nEnter the initial value of x: ";
+        cin >> x0;
+        cout << "\nEnter the initial value of y: ";
+        cin >> y0;
+        cout << "\nEnter the step size h (positive): ";
+        cin >> h;
+
+        /* Validate step size */
+        if(h <= 0)
+        {
+            cout << "\nStep size must be positive.\n";
+            return 1;
+        }
+
+        /* Input final x depending on selected option */
+        if(choice == 1)
+        {
+            cout << "\nEnter the value of x at which you want to find y: ";
+        }
+        else if(choice == 2)
+        {
+            cout << "\nEnter the final value of x: ";
+        }
+        else
+        {
+            cout << "\nInvalid Choice.\n";
+            return 0;
+        }
+
         cin >> x_final;
 
-        /* Number of steps */
-        n = (int)round((x_final - x0) / h);
+        /* Calculate number of steps */
+        int n = ceil((x_final - x0) / h);
 
+        /* Validate input range */
         if(n <= 0 || x_final <= x0)
         {
             cout << "\nInvalid input values.\n";
             return 1;
         }
 
+        /* Arrays to store x and y values */
         vector<double> x(n+1), y(n+1);
 
-        /* Initial conditions */
+        /* Assign initial conditions */
         x[0] = x0;
         y[0] = y0;
 
-        /* Modified Euler Iteration */
+        /* Modified Euler (Heun’s) Method computation */
         for(int i = 0; i < n; i++)
         {
-            double predictor = y[i] + h * f(x[i], y[i]);   // Predictor
-            y[i+1] = y[i] + (h/2.0) *
-                     (f(x[i], y[i]) + f(x[i] + h, predictor)); // Corrector
+            /* Predictor step */
+            double y_predictor = y[i] + h * f(x[i], y[i]);
+
+            /* Corrector step */
+            y[i+1] = y[i] + (h/2) * ( f(x[i], y[i])  + f(x[i] + h, y_predictor) );
+
+            /* Increment x */
             x[i+1] = x[i] + h;
         }
 
-        cout << "\nThe value of y at x = " << x_final << " is: " << y[n] << endl;
-
-        /* Percentage error calculation */
-        double exact, pcerr;
-        cout << "\nEnter the exact value: ";
-        cin >> exact;
-
-        if(exact != 0)
+        /* Option 1: Value of y at a specific x */
+        if(choice == 1)
         {
-            pcerr = fabs((exact - y[n]) / exact) * 100;
-            cout << "\nPercentage error is: " << pcerr << " %\n";
-        }
-        else
-        {
-            cout << "\nExact value is zero, percentage error undefined.\n";
-        }
-    }
+            cout << "\nThe value of y at x = " << x_final << " is: " << y[n] << endl;
 
-    /* ---------- Case 2: Tabular form over a range ---------- */
-    else if(choice == 2)
-    {
-        cout << "\nEnter the final value of x: ";
-        cin >> x_final;
+            double exact;
+            cout << "\nEnter the exact value of y at x = "<< x_final << ": ";
+            cin >> exact;
 
-        n = (int)round((x_final - x0) / h);
-         if(n <= 0 || x_final <= x0)
-        {
-            cout << "\nInvalid input values.\n";
-            return 1;
+            /* Percentage error calculation */
+            if(exact != 0)
+            {
+                double pcerr = fabs((exact - y[n]) / exact) * 100;
+                cout << "\nPercentage error is: "<< pcerr << "%.\n";
+            }
+            else
+            {
+                cout << "\nExact value is zero, percentage error undefined.\n";
+            }
         }
 
-        vector<double> x(n+1), y(n+1);
-
-        /* Initial conditions */
-        x[0] = x0;
-        y[0] = y0;
-
-        /* Display table header */
-        cout << "\nValues of y at regular intervals:\n";
-        cout << left << setw(12) << "x" << setw(15) << "y" << endl;
-        cout << string(40, '-') << endl;
-
-        /* Modified Euler Iteration */
-        for(int i = 0; i < n; i++)
+        /* Option 2: Display tabulated values */
+        else if(choice == 2)
         {
-            cout << left << setw(12) << x[i] << setw(15) << y[i] << endl;
+            cout << "\nValues of y at regular intervals:\n";
+            cout << left << setw(12) << "x" << setw(15) << "y" << endl;
+            cout << string(40, '-') << endl;
 
-            double predictor = y[i] + h * f(x[i], y[i]);
-            y[i+1] = y[i] + (h/2.0) *
-                     (f(x[i], y[i]) + f(x[i] + h, predictor));
-            x[i+1] = x[i] + h;
+            for(int i = 0; i < n+1; i++)
+            {
+                cout << left << setw(12) << x[i]<< setw(15) << y[i] << endl;
+            }
         }
 
-        /* Final point */
-        cout << left << setw(12) << x[n] << setw(15) << y[n] << endl;
-    }
+        /* Ask user whether to repeat the program */
+        cout << "\nDo you want to run the program again? (y/n): ";
+        cin >> check;
 
-    return 0;
+    } while(tolower(check) == 'y');
+
+    return 0;   // Successful termination
 }
 
